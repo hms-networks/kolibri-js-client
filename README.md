@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@hms-networks%2Fkolibri-js-client.svg)](https://badge.fury.io/js/@hms-networks%2Fkolibri-js-client)
+
 # Kolibri-JS-Client
 
 The Kolibri-JS-Client is an easy to use Kolibri Consumer API client. It allows to interact with a Kolibri Broker with a simple request / response model with additional event driven data functionalities. The client is written in TypeScript and can also be used with JavaScript.
