@@ -7,8 +7,8 @@
     "@hms-networks/kolibri-js-client": "^1.0.0"
   },
   "devDependencies": {
-    "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "start": "ts-node main.ts"
