@@ -1,0 +1,33 @@
+{
+    "extends": "@tsconfig/node14/tsconfig.json",
+    "compilerOptions": {
+        "lib": [
+            "es2019"
+        ],
+        "target": "es2019",
+        "moduleResolution": "node",
+        "outDir": "build/node",
+        "rootDir": "./src",
+        "sourceMap": true,
+        "inlineSources": true,
+        "removeComments": false,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noFallthroughCasesInSwitch": true,
+        "types": [
+            "node",
+            "jest",
+            "jest-extended"
+        ],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+    },
+    "include": [
+        "src/**/*",
+    ]
+}

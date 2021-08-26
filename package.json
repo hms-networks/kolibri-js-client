@@ -1,0 +1,78 @@
+{
+  "name": "@hms-networks/kolibri-js-client",
+  "version": "1.0.0",
+  "description": "Kolibri Consumer API client for building kolibri based applications",
+  "author": "HMS Industrial Networks AB",
+  "homepage": "https://www.hms-networks.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hms-networks/kolibri-js-client"
+  },
+  "bugs": {
+    "url": "https://github.com/hms-networks/kolibri-js-client/issues"
+  },
+  "keywords": [
+    "kolibri",
+    "client",
+    "consumer",
+    "rpc",
+    "iot",
+    "iiot",
+    "internet of things",
+    "hms"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/cjs/index.js",
+  "module": "build/esm5/index.js",
+  "es2015": "build/es2015/index.js",
+  "types": "build/types/index.d.ts",
+  "browser": "build/bundles/kolibri-js-client.umd.min.js",
+  "scripts": {
+    "build": "npm run build:cjs",
+    "build:all": "npm run build:cjs && npm run build:es2015 && npm run build:esm5 && npm run build:types && npm run build:umd && npm run build:umd:min",
+    "build:clean": "rimraf build",
+    "build:es2015": "tsc --project tsconfig.esm2015.json",
+    "build:esm5": "tsc --project tsconfig.esm5.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:types": "tsc --project tsconfig.types.json",
+    "build:umd": "webpack --config webpack.umd.ts",
+    "build:umd:min": "webpack --config webpack.umd.min.ts",
+    "test": "jest --coverage --verbose",
+    "test:ci": "jest --runInBand --coverage --no-cache --verbose"
+  },
+  "dependencies": {
+    "@hms-networks/kolibri-js-core": "^1.0.0",
+    "class-transformer": "^0.4.0",
+    "reflect-metadata": "^0.1.13",
+    "url-parse": "^1.5.3",
+    "websocket": "^1.0.34",
+    "websocket-as-promised": "^2.0.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^14.17.11",
+    "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/url-parse": "^1.4.4",
+    "@types/websocket": "^1.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.24.1",
+    "jest": "^27.0.6",
+    "jest-extended": "^0.11.5",
+    "jest-junit": "^12.2.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

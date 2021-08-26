@@ -1,0 +1,8 @@
+src
+test
+sample
+jest.config.js
+webpack*.ts
+tsconfig.*
+.prettierrc
+.eslintrc

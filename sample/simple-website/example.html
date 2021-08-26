@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<title>Kolibri Js Client Sample</title>
+<html>
+
+<head>
+    <script src="../../build/bundles/kolibri-js-client.umd.min.js"></script>
+    <script>
+
+        let client;
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const config = {
+                host: 'ws://localhost:8080',
+                project: 'testv21',
+                path: '/'
+            };
+
+            client = KolibriJsClient.KolibriClientFactory.create(config);
+
+            client.addOnUserNotifyListener((data) => {
+                console.log(data);
+            });
+        });
+
+        async function connect() {
+            await client.connect()
+            const elem = document.getElementById('connect');
+            const loginBtn = document.getElementById('loginBtn');
+            elem.hidden = false;
+            loginBtn.disabled = false;
+        }
+
+        async function login() {
+            const loginParams = {
+                user: 'user',
+                password: 'password',
+                interval: 60,
+                timeout: 5
+            };
+
+            const result = await client.login(loginParams)
+            const elem = document.getElementById('login');
+            elem.innerText += result.client;
+            elem.hidden = false;
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Kolibri Js Client Sample</h1>
+    <div>
+        <button onclick="connect()">Connect</button>
+        <div hidden="true" id="connect">Connected</div>
+    </div>
+    <div style="height: 30px;"></div>
+    <div>
+        <button id="loginBtn" disabled="true" onclick="login()">Login</button>
+        <div hidden="true" id="login">Successfully logged in. Your client id is: </div>
+    </div>
+</body>
+
+</html>
