@@ -24,6 +24,7 @@ import {
 import WebSocketAsPromised from 'websocket-as-promised';
 import { classToPlain } from 'class-transformer';
 import { w3cwebsocket as WebSocket } from 'websocket';
+import * as http from 'http';
 import * as https from 'https';
 
 export interface ReconnectOptions {
@@ -36,6 +37,7 @@ export interface ConnectionOptions {
     protocol: string,
     tlsOptions?: https.RequestOptions,
     reconnectOptions?: ReconnectOptions,
+    requestOptions?: http.RequestOptions,
     clientMessageListener: (jsonrpc: any) => void
 }
 export class KolibriConnection {
@@ -109,8 +111,8 @@ export class KolibriConnection {
 
     private createWebSocket(brokerUrl: string, kolibriProtocol: string): WebSocketAsPromised {
         return new WebSocketAsPromised(brokerUrl, {
-            createWebSocket: url => new WebSocket(url, kolibriProtocol, undefined, undefined, undefined,
-                { tlsOptions: this.options.tlsOptions }),
+            createWebSocket: url => new WebSocket(url, kolibriProtocol, undefined, undefined,
+                this.options.requestOptions, { tlsOptions: this.options.tlsOptions }),
             packMessage: data => JSON.stringify(data),
             unpackMessage: data => JSON.parse(data as string),
             attachRequestId: (data, requestId) => Object.assign({ id: requestId }, data),

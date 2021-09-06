@@ -17,7 +17,7 @@
 
 import Url from 'url-parse';
 import { Subscription } from './subscription';
-import { KolibriConnection } from './kolibri_connection';
+import { ConnectionOptions, KolibriConnection } from './kolibri_connection';
 import {
     DefaultKolibriResponse, errorcode, errorFromCode, isJsonRpcError, isJsonRpcFailure,
     isJsonRpcRequest, isJsonRpcSuccess, isKolibriRpcError, isKolibriRpcRequest, isKolibriRpcSuccess, JsonRpcRequest,
@@ -30,7 +30,7 @@ import {
     KolibriSuccessResponse
 } from '@hms-networks/kolibri-js-core';
 import { ClientConfig } from '../client_config';
-
+import { HttpsProxyAgent } from 'https-proxy-agent';
 export abstract class BaseClient {
     private rpcId = 1;
     private tId = 1;
@@ -63,13 +63,22 @@ export abstract class BaseClient {
             brokerUrl.set('port', config.port.toString());
         }
 
-        this.connection = new KolibriConnection({
+        const connectionOptions: ConnectionOptions = {
             url: brokerUrl,
             protocol: this.getKolibriProtocol(),
             tlsOptions: config.tls,
             reconnectOptions: config.reconnect,
             clientMessageListener: (jsonrpc) => this.clientEventDispatcher(jsonrpc)
-        });
+        };
+
+        if (config.proxy) {
+            const agent = new HttpsProxyAgent(config.proxy);
+            connectionOptions.requestOptions = {
+                agent: agent
+            };
+        }
+
+        this.connection = new KolibriConnection(connectionOptions);
 
         this.initBuildInConsumerRpcs();
 

@@ -22,7 +22,10 @@ const config: Configuration = {
     target: 'web',
     entry: './build/esm5/index.js',
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
+        alias: {
+            'https-proxy-agent': false
+        }
     },
     output: {
         path: resolve(__dirname, './build/bundles'),

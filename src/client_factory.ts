@@ -18,9 +18,12 @@
 import { KolibriClient } from './client';
 import { ClientConfig } from './client_config';
 import { KolibriRpcClient } from './common/kolibri_rpc_client';
-
+import { isBrowser } from 'browser-or-node';
 export class KolibriClientFactory {
     static create(config: ClientConfig): KolibriClient {
+        if (isBrowser) {
+            delete config.proxy;
+        }
         const delegate = new KolibriRpcClient(config);
         return new KolibriClient(delegate);
     }
