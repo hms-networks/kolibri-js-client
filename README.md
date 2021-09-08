@@ -22,6 +22,7 @@ The Kolibri-JS-Client abstracts most of the Kolibri Protocol internals from the 
 - NodeJS and Browser support
 - Support for TLS
 - Support for Kolibri-RPC
+- Support for HTTP/HTTPS Proxy
 - Fully typed
 
 ## Install
@@ -66,6 +67,26 @@ const client = KolibriClientFactory.create(config);
 await client.connect();
 // RPC calls...
 await client.disconnect();
+```
+
+### Proxy Settings
+
+Setting a proxy is only supported on Node environment. Proxy settings are ignored on the Browser.
+
+```typescript
+import { ClientConfig, KolibriClientFactory } from '@hms-networks/kolibri-js-client';
+
+const config: ClientConfig = {
+     host: 'ws://localhost:8080',
+     project: 'testv21',
+     path: '/',
+     proxy: {
+         host: 'localhost',
+         port: 8089
+     }
+};
+
+const client = KolibriClientFactory.create(config);
 ```
 
 ### TLS Connection
