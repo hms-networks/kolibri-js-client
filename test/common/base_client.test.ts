@@ -23,9 +23,10 @@ import { ClientConfig } from '../../src';
 import Url from 'url-parse';
 import { TestErrorResponse, TestRequest } from '../test_utils/test_models';
 import {
-    DefaultKolibriResponse, errorcode, errorFromCode, KolibriRequestError,
+    DefaultKolibriResponse, errorcode, errorFromCode,
     KolibriRpcErrorResponse, KolibriRpcRequest, KolibriRpcSuccessResponse, cV33
 } from '@hms-networks/kolibri-js-core';
+import {KolibriRequestError} from '../../src/error/kolibri_request';
 
 jest.mock('../../src/common/subscription');
 jest.mock('../../src/common/kolibri_connection');
