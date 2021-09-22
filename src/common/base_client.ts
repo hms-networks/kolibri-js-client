@@ -479,7 +479,7 @@ export abstract class BaseClient {
                 error = new QueueSizeLimitExceededError(data);
                 break;
             default:
-                error = new Error('Unknown request error');
+                error = new KolibriRequestError('Unknown request error');
                 break;
         }
 

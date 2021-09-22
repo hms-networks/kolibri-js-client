@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-export abstract class KolibriRequestError extends Error {
+export class KolibriRequestError extends Error {
     data?: any;
     constructor(message: string, data?: any) {
         super(message);
