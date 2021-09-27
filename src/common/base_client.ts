@@ -24,13 +24,13 @@ import {
     JsonRpcResponse,
     KolibriErrorResponse,
     KolibriRequest,
-    KolibriRequestError,
     KolibriRequestMethods, KolibriRpcErrorResponse, KolibriRpcRequest,
     KolibriRpcSuccessResponse,
     KolibriSuccessResponse
 } from '@hms-networks/kolibri-js-core';
 import { ClientConfig } from '../client_config';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { getRequestError } from '../error/kolibri_request_error';
 export abstract class BaseClient {
     private rpcId = 1;
     private tId = 1;
@@ -176,7 +176,9 @@ export abstract class BaseClient {
             return response;
         }
         else if (isKolibriRpcError(response)) {
-            throw new KolibriRequestError(response.error);
+            throw getRequestError(
+                response.error.code,
+                response.error.data);
         }
         else {
             throw new Error('Unknown response type!');
@@ -190,7 +192,9 @@ export abstract class BaseClient {
             return response;
         }
         else if (isJsonRpcFailure(response)) {
-            throw new KolibriRequestError(response.error);
+            throw getRequestError(
+                response.error.code,
+                response.error.data);
         }
         else {
             throw new Error('Unknown response type!');

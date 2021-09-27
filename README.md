@@ -147,7 +147,7 @@ After the registration of the addOnWriteListener and the client.subscribe RPC th
 
 ## Error Handling
 
-All the errors returned from the Kolibri Broker are instances of `KolibriRequestError` class containing the error code and the reason (if available).
+All the errors returned from the Kolibri Broker are instances of subclasses to the `KolibriRequestError` class containing the reason and additional data (if available).
 
 ```typescript
 const params: LoginParams = {
@@ -160,6 +160,6 @@ try{
     const result = await client.login(params);
 }
 catch(e){
-    console.log(e); // KolibriRequest failed: -31905
+    console.log(e); // Example: AccessDeniedError: Access denied error
 }
 ```

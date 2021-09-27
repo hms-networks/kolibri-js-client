@@ -78,6 +78,7 @@ function onlyPublicMethodFilter(): (value: any, index: number, array: any[]) => 
         'sendKolibriRpcRequest',
         'getNextRpcId',
         'getNextTid'
+
     ].includes(value);
 }
 

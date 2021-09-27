@@ -20,3 +20,4 @@ import 'reflect-metadata';
 export * from './client_factory';
 export * from './client';
 export * from './client_types';
+export * from './error/kolibri_request_error';
