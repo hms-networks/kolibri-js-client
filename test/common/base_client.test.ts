@@ -26,7 +26,7 @@ import {
     DefaultKolibriResponse, errorcode, errorFromCode,
     KolibriRpcErrorResponse, KolibriRpcRequest, KolibriRpcSuccessResponse, cV33
 } from '@hms-networks/kolibri-js-core';
-import {KolibriRequestError} from '../../src/error/kolibri_request';
+import {KolibriRequestError} from '../../src/error/kolibri_request_error';
 
 jest.mock('../../src/common/subscription');
 jest.mock('../../src/common/kolibri_connection');

@@ -151,3 +151,53 @@ export class QueueSizeLimitExceededError extends KolibriRequestError {
         super('Queue size limit exceeded error', data);
     }
 }
+
+export function getRequestError(code: number, data?: any) : KolibriRequestError {
+    switch (code) {
+        case -31901:
+            return new GeneralError(data);
+        case -31902:
+            return new InvalidOpCodeError(data);
+        case -31903:
+            return new InvalidOptionError(data);
+        case -31904:
+            return new InvalidProtocolVersionError(data);
+        case -31905:
+            return new AccessDeniedError(data);
+        case -31906:
+            return new InvalidPathError(data);
+        case -31907:
+            return new InvalidNodeTypeError(data);
+        case -31908:
+            return new InvalidNodeIndexError(data);
+        case -31909:
+            return new InvalidNodePropertyError(data);
+        case -31910:
+            return new InvalidNodeStateError(data);
+        case -31911:
+            return new InvalidSequenceNumberError(data);
+        case -31912:
+            return new InvalidDataTypeError(data);
+        case -31913:
+            return new InvalidRecipientError(data);
+        case -31914:
+            return new InvalidProtocolError(data);
+        case -31915:
+            return new MissingParameterError(data);
+        case -31916:
+            return new InvalidParameterError(data);
+        case -31917:
+            return new InvalidValueError(data);
+        case -31918:
+            return new ItemNotFoundError(data);
+        case -31919:
+            return new ItemExistsError(data);
+        case -31920:
+            return new RateLimitExceededError(data);
+        case -31921:
+            return new QueueSizeLimitExceededError(data);
+        default:
+            return new KolibriRequestError('Unknown request error');
+    }
+}
+

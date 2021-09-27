@@ -30,13 +30,7 @@ import {
 } from '@hms-networks/kolibri-js-core';
 import { ClientConfig } from '../client_config';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { AccessDeniedError, GeneralError, InvalidDataTypeError, InvalidNodeIndexError,
-    InvalidNodePropertyError, InvalidNodeStateError, InvalidNodeTypeError, InvalidOpCodeError,
-    InvalidOptionError, InvalidParameterError, InvalidPathError, InvalidProtocolError,
-    InvalidProtocolVersionError, InvalidRecipientError, InvalidSequenceNumberError, InvalidValueError,
-    ItemExistsError, ItemNotFoundError, KolibriRequestError, MissingParameterError,
-    QueueSizeLimitExceededError, RateLimitExceededError
-} from '../error/kolibri_request';
+import { getRequestError } from '../error/kolibri_request_error';
 export abstract class BaseClient {
     private rpcId = 1;
     private tId = 1;
@@ -182,7 +176,7 @@ export abstract class BaseClient {
             return response;
         }
         else if (isKolibriRpcError(response)) {
-            throw this.getRequestError(
+            throw getRequestError(
                 response.error.code,
                 response.error.data);
         }
@@ -198,7 +192,7 @@ export abstract class BaseClient {
             return response;
         }
         else if (isJsonRpcFailure(response)) {
-            throw this.getRequestError(
+            throw getRequestError(
                 response.error.code,
                 response.error.data);
         }
@@ -410,79 +404,5 @@ export abstract class BaseClient {
         if (this.userSubscribeParams && this.userSubscribeResult) {
             await this.userSubscribe(this.userSubscribeParams);
         }
-    }
-
-    private getRequestError(code: number, data?: any) : KolibriRequestError {
-        let error: KolibriRequestError;
-        switch (code) {
-            case -31901:
-                error = new GeneralError(data);
-                break;
-            case -31902:
-                error = new InvalidOpCodeError(data);
-                break;
-            case -31903:
-                error = new InvalidOptionError(data);
-                break;
-            case -31904:
-                error = new InvalidProtocolVersionError(data);
-                break;
-            case -31905:
-                error = new AccessDeniedError(data);
-                break;
-            case -31906:
-                error = new InvalidPathError(data);
-                break;
-            case -31907:
-                error = new InvalidNodeTypeError(data);
-                break;
-            case -31908:
-                error = new InvalidNodeIndexError(data);
-                break;
-            case -31909:
-                error = new InvalidNodePropertyError(data);
-                break;
-            case -31910:
-                error = new InvalidNodeStateError(data);
-                break;
-            case -31911:
-                error = new InvalidSequenceNumberError(data);
-                break;
-            case -31912:
-                error = new InvalidDataTypeError(data);
-                break;
-            case -31913:
-                error = new InvalidRecipientError(data);
-                break;
-            case -31914:
-                error = new InvalidProtocolError(data);
-                break;
-            case -31915:
-                error = new MissingParameterError(data);
-                break;
-            case -31916:
-                error = new InvalidParameterError(data);
-                break;
-            case -31917:
-                error = new InvalidValueError(data);
-                break;
-            case -31918:
-                error = new ItemNotFoundError(data);
-                break;
-            case -31919:
-                error = new ItemExistsError(data);
-                break;
-            case -31920:
-                error = new RateLimitExceededError(data);
-                break;
-            case -31921:
-                error = new QueueSizeLimitExceededError(data);
-                break;
-            default:
-                error = new KolibriRequestError('Unknown request error');
-                break;
-        }
-
-        return error;
     }
 }
