@@ -15,7 +15,7 @@
 */
 
 
-import { cV33 as latest, KolibriRpcServer as RemoteRpcTarget } from '@hms-networks/kolibri-js-core';
+import { cV32 as latest, KolibriRpcServer as RemoteRpcTarget } from '@hms-networks/kolibri-js-core';
 
 export { ClientConfig } from './client_config';
 
@@ -23,8 +23,6 @@ export type KolibriRpcServer = RemoteRpcTarget;
 
 export type LoginParams = latest.LoginParams;
 export type LoginResult = latest.LoginResult;
-
-export type UpdateTokenParams = latest.UpdateTokenParams;
 
 export type WriteParams = latest.WriteParams;
 

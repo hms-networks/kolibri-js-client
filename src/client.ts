@@ -25,7 +25,7 @@ import {
     ProjectBrowseParams, ProjectBrowseResult, ProjectCreateParams, ProjectDeleteParams, ProjectGetHistoryUsageParams,
     ProjectGetHistoryUsageResult, ProjectGetLiveUsageParams, ProjectGetLiveUsageResult, ProjectGetPropertiesParams,
     ProjectGetPropertiesResult, ProjectGetStatisticsParams, ProjectGetStatisticsResult, ProjectModifyParams,
-    ReadParams, ReadResult, UpdateTokenParams, SubscribeParams, SubscribeResult, UnsubscribeParams, UserBrowseParams,
+    ReadParams, ReadResult, SubscribeParams, SubscribeResult, UnsubscribeParams, UserBrowseParams,
     UserBrowseResult, UserCreateParams, UserDeleteParams, UserGetHistoryParams, UserGetHistoryResult,
     UserGetPropertiesParams, UserGetPropertiesResult, UserGetSessionsParams, UserGetSessionsResult,
     UserGroupAddMemberParams, UserGroupBrowseParams, UserGroupBrowseResult, UserGroupCreateParams,
@@ -83,14 +83,6 @@ export class KolibriClient {
 
     async login(params?: LoginParams): Promise<LoginResult> {
         return this.delegate.login(params);
-    }
-
-    async updateToken(params: UpdateTokenParams): Promise<number> {
-        return this.delegate.updateToken(params);
-    }
-
-    async logout(): Promise<number> {
-        return this.delegate.logout();
     }
 
     async close(): Promise<number> {

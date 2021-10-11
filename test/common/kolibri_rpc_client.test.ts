@@ -20,7 +20,7 @@ import { Subscription } from '../../src/common/subscription';
 import { KolibriRpcClient } from '../../src/common/kolibri_rpc_client';
 
 import { ClientConfig } from '../../src/client_config';
-import { cV33 } from '@hms-networks/kolibri-js-core';
+import { cV32 } from '@hms-networks/kolibri-js-core';
 
 jest.mock('../../src/common/kolibri_connection');
 jest.mock('../../src/common/subscription');
@@ -46,13 +46,6 @@ describe('KolibriRpcClient :', () => {
         });
     });
 
-    describe('updateToken:', () => {
-        it('should call and get result', async () => {
-            const result = await client.updateToken({} as any);
-            expect(result).toEqual(mockKolibriResponse.result);
-        });
-    });
-
     describe('close:', () => {
         it('should call and get result', async () => {
             const result = await client.close();
@@ -62,23 +55,23 @@ describe('KolibriRpcClient :', () => {
 
     describe('write:', () => {
         it('should call and get result with qos level <=2', async () => {
-            const nodes = [new cV33.WriteNodeParam('/path', 123, 1, true)];
-            const params = new cV33.WriteParams(nodes);
+            const nodes = [new cV32.WriteNodeParam('/path', 123, 1, true)];
+            const params = new cV32.WriteParams(nodes);
             const result = await client.write(params);
             expect(result).toEqual(mockKolibriResponse.result);
         });
 
         it('should call and get result with qos level >=3', async () => {
-            const nodes = [new cV33.WriteNodeParam('/path', 123, 3, true)];
-            const params = new cV33.WriteParams(nodes);
+            const nodes = [new cV32.WriteNodeParam('/path', 123, 3, true)];
+            const params = new cV32.WriteParams(nodes);
             const result = await client.write(params);
             expect(result).toEqual(mockKolibriResponse.result);
             expect(KolibriConnectionMock.prototype.sendRequest).toHaveBeenCalledTimes(2);
         });
 
         it('should fail and call cancel with qos level >=3', async () => {
-            const nodes = [new cV33.WriteNodeParam('/path', 123, 3, true)];
-            const params = new cV33.WriteParams(nodes);
+            const nodes = [new cV32.WriteNodeParam('/path', 123, 3, true)];
+            const params = new cV32.WriteParams(nodes);
 
             KolibriConnectionMock.prototype.sendRequest.mockRejectedValueOnce(new Error('some error'));
 
@@ -89,10 +82,10 @@ describe('KolibriRpcClient :', () => {
 
         it('should fail if qos levels are mixed in one request', async () => {
             const nodes = [
-                new cV33.WriteNodeParam('/path', 123, 1, true),
-                new cV33.WriteNodeParam('/path', 123, 3, true)
+                new cV32.WriteNodeParam('/path', 123, 1, true),
+                new cV32.WriteNodeParam('/path', 123, 3, true)
             ];
-            const params = new cV33.WriteParams(nodes);
+            const params = new cV32.WriteParams(nodes);
 
             await expect(async () => { await client.write(params); }).rejects.toThrowError();
         });

@@ -8,7 +8,7 @@ The Kolibri-JS-Client is an easy to use Kolibri Consumer API client. It allows t
 
 Currently supported Kolibri Consumer Protocol Versions:
 
-- v3.3
+- v3.2
 
 ## Features
 
