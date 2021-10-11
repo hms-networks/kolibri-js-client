@@ -7,4 +7,8 @@
 
 ## 1.0.0
 
-Initial public release of the @hms-networks/kolibri-ks-core lib
+Initial public release of the @hms-networks/kolibri-js-client lib
+
+## 0.9.0
+
+Backwards compatibility release to use the Kolibri Consumer Protocol v3.2.c.kolibri
