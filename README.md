@@ -160,6 +160,8 @@ try{
     const result = await client.login(params);
 }
 catch(e){
-    console.log(e); // Example: AccessDeniedError: Access denied error
+    if(e instanceof AccessDeniedError){
+        console.log(e.message);
+    }
 }
 ```
