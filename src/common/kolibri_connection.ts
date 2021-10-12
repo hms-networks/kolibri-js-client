@@ -112,7 +112,7 @@ export class KolibriConnection {
     private createWebSocket(brokerUrl: string, kolibriProtocol: string): WebSocketAsPromised {
         return new WebSocketAsPromised(brokerUrl, {
             createWebSocket: url => new WebSocket(url, kolibriProtocol, undefined, undefined,
-                this.options.requestOptions, { tlsOptions: this.options.tlsOptions }),
+                this.options.requestOptions, { tlsOptions: this.options.tlsOptions ?? {} }),
             packMessage: data => JSON.stringify(data),
             unpackMessage: data => JSON.parse(data as string),
             attachRequestId: (data, requestId) => Object.assign({ id: requestId }, data),
