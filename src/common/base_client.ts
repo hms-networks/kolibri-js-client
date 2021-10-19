@@ -140,7 +140,7 @@ export abstract class BaseClient {
 
     public addOnNodeNotifyListener(listener: (data: any[]) => void): void {
         this.subscription.onNodeNotify = listener;
-    };
+    }
 
     public addOnErrorListener(listener: (error: any) => void): void {
         this.subscription.onError = listener;
