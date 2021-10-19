@@ -16,16 +16,14 @@
 
 
 import * as https from 'https';
-import { HttpsProxyAgentOptions } from 'https-proxy-agent';
 import { LoginParams } from './client_types';
 import { ReconnectOptions } from './common/kolibri_connection';
 
 /**
 * Options to pass to `https.request` if connecting via TLS.
-* @see https://nodejs.org/api/tls.html#tls_tls_connect_options_callback
+* @see https://nodejs.org/api/https.html#https_https_request_options_callback
 */
 export type TlsConfig = https.RequestOptions
-export type ProxyConfig = HttpsProxyAgentOptions
 export type ReconnectConfig = ReconnectOptions & { resumeSubscriptions?: boolean };
 export type AuthConfig = LoginParams;
 
@@ -36,6 +34,5 @@ export type ClientConfig = {
     path: string,
     auth?: AuthConfig,
     tls?: TlsConfig
-    proxy?: ProxyConfig,
     reconnect?: ReconnectConfig
 }

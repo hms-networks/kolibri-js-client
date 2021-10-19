@@ -15,6 +15,7 @@
 */
 
 
+import { NodeUnsubscribeParams } from '.';
 import {
     KolibriRpcServer,
     LoginParams, LoginResult, NodeBrowseParams, NodeBrowseResult, NodeCreateParams,
@@ -25,13 +26,14 @@ import {
     ProjectBrowseParams, ProjectBrowseResult, ProjectCreateParams, ProjectDeleteParams, ProjectGetHistoryUsageParams,
     ProjectGetHistoryUsageResult, ProjectGetLiveUsageParams, ProjectGetLiveUsageResult, ProjectGetPropertiesParams,
     ProjectGetPropertiesResult, ProjectGetStatisticsParams, ProjectGetStatisticsResult, ProjectModifyParams,
-    ReadParams, ReadResult, SubscribeParams, SubscribeResult, UnsubscribeParams, UserBrowseParams,
+    ReadParams, ReadResult, UpdateTokenParams, SubscribeParams, SubscribeResult, UnsubscribeParams, UserBrowseParams,
     UserBrowseResult, UserCreateParams, UserDeleteParams, UserGetHistoryParams, UserGetHistoryResult,
     UserGetPropertiesParams, UserGetPropertiesResult, UserGetSessionsParams, UserGetSessionsResult,
     UserGroupAddMemberParams, UserGroupBrowseParams, UserGroupBrowseResult, UserGroupCreateParams,
     UserGroupDeleteParams, UserGroupGetPropertiesParams, UserGroupGetPropertiesResult, UserGroupIsMemberParams,
     UserGroupListMembersParams, UserGroupModifyParams, UserGroupRemoveMemberParams, UserModifyParams,
-    UserSubscribeParams, UserSubscribeResult, UserUnsubscribeParams, UserUnsubscribeResult, WriteParams
+    UserSubscribeParams, UserSubscribeResult, UserUnsubscribeParams, UserUnsubscribeResult, WriteParams,
+    NodeSubscribeParams
 } from './client_types';
 
 import { KolibriRpcClient } from './common/kolibri_rpc_client';
@@ -51,6 +53,10 @@ export class KolibriClient {
 
     public addOnUserNotifyListener(listener: (data: any[]) => void) {
         this.delegate.addOnUserNotifyListener(listener);
+    }
+
+    public addOnNodeNotifyListener(listener: (data: any[]) => void) {
+        this.delegate.addOnNodeNotifyListener(listener);
     }
 
     public addOnErrorListener(listener: (error: any) => void) {
@@ -83,6 +89,14 @@ export class KolibriClient {
 
     async login(params?: LoginParams): Promise<LoginResult> {
         return this.delegate.login(params);
+    }
+
+    async updateToken(params: UpdateTokenParams): Promise<number> {
+        return this.delegate.updateToken(params);
+    }
+
+    async logout(): Promise<number> {
+        return this.delegate.logout();
     }
 
     async close(): Promise<number> {
@@ -275,5 +289,13 @@ export class KolibriClient {
 
     async nodeDeleteHistory(params: NodeDeleteHistoryParams): Promise<number> {
         return this.delegate.nodeDeleteHistory(params);
+    }
+
+    async nodeSubscribe(params: NodeSubscribeParams): Promise<number> {
+        return this.delegate.nodeSubscribe(params);
+    }
+
+    async nodeUnsubscribe(params: NodeUnsubscribeParams): Promise<number> {
+        return this.delegate.nodeUnsubscribe(params);
     }
 }

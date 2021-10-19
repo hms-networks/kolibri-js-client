@@ -30,6 +30,8 @@ export class Subscription<T extends AbstractNode> {
 
     onUserNotify?: (data: any[]) => void;
 
+    onNodeNotify?: (data: any[]) => void;
+
     onError?: (error: any) => void;
 
     storeSubscribedNodes(nodes: T[]): void {

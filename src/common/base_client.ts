@@ -17,20 +17,20 @@
 
 import Url from 'url-parse';
 import { Subscription } from './subscription';
-import { ConnectionOptions, KolibriConnection } from './kolibri_connection';
+import { KolibriConnection } from './kolibri_connection';
 import {
     DefaultKolibriResponse, errorcode, errorFromCode, isJsonRpcError, isJsonRpcFailure,
     isJsonRpcRequest, isJsonRpcSuccess, isKolibriRpcError, isKolibriRpcRequest, isKolibriRpcSuccess, JsonRpcRequest,
     JsonRpcResponse,
     KolibriErrorResponse,
     KolibriRequest,
+    KolibriRequestError,
     KolibriRequestMethods, KolibriRpcErrorResponse, KolibriRpcRequest,
     KolibriRpcSuccessResponse,
     KolibriSuccessResponse
 } from '@hms-networks/kolibri-js-core';
 import { ClientConfig } from '../client_config';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import { getRequestError } from '../error/kolibri_request_error';
+
 export abstract class BaseClient {
     private rpcId = 1;
     private tId = 1;
@@ -63,22 +63,13 @@ export abstract class BaseClient {
             brokerUrl.set('port', config.port.toString());
         }
 
-        const connectionOptions: ConnectionOptions = {
+        this.connection = new KolibriConnection({
             url: brokerUrl,
             protocol: this.getKolibriProtocol(),
             tlsOptions: config.tls,
             reconnectOptions: config.reconnect,
             clientMessageListener: (jsonrpc) => this.clientEventDispatcher(jsonrpc)
-        };
-
-        if (config.proxy) {
-            const agent = new HttpsProxyAgent(config.proxy);
-            connectionOptions.requestOptions = {
-                agent: agent
-            };
-        }
-
-        this.connection = new KolibriConnection(connectionOptions);
+        });
 
         this.initBuildInConsumerRpcs();
 
@@ -147,6 +138,10 @@ export abstract class BaseClient {
         this.subscription.onUserNotify = listener;
     }
 
+    public addOnNodeNotifyListener(listener: (data: any[]) => void): void {
+        this.subscription.onNodeNotify = listener;
+    };
+
     public addOnErrorListener(listener: (error: any) => void): void {
         this.subscription.onError = listener;
     }
@@ -176,9 +171,7 @@ export abstract class BaseClient {
             return response;
         }
         else if (isKolibriRpcError(response)) {
-            throw getRequestError(
-                response.error.code,
-                response.error.data);
+            throw new KolibriRequestError(response.error);
         }
         else {
             throw new Error('Unknown response type!');
@@ -192,9 +185,7 @@ export abstract class BaseClient {
             return response;
         }
         else if (isJsonRpcFailure(response)) {
-            throw getRequestError(
-                response.error.code,
-                response.error.data);
+            throw new KolibriRequestError(response.error);
         }
         else {
             throw new Error('Unknown response type!');
@@ -254,6 +245,19 @@ export abstract class BaseClient {
             const response = new DefaultKolibriResponse(request.id, 0);
             await this.connection.sendResponse(response);
             this.subscription.onUserNotify?.(userNotifyRequest.params);
+        }
+        catch (e) {
+            this.subscription.onError?.(e);
+        }
+    }
+
+    protected async handleNodeNotifyRequest(request: any): Promise<void> {
+        const nodeNotifyRequest: any = request;
+
+        try {
+            const response = new DefaultKolibriResponse(request.id, 0);
+            await this.connection.sendResponse(response);
+            this.subscription.onNodeNotify?.(nodeNotifyRequest.params);
         }
         catch (e) {
             this.subscription.onError?.(e);
@@ -359,6 +363,8 @@ export abstract class BaseClient {
             this.handleUserNotifyRequest.bind(this));
         this.consumerRpcs.set(KolibriRequestMethods.CommitRequestMethod,
             this.handleCommitRequest.bind(this));
+        this.consumerRpcs.set(KolibriRequestMethods.NodeNotifyRequestMethod,
+            this.handleNodeNotifyRequest.bind(this));
     }
 
     private initReconnectHandler(): void {
