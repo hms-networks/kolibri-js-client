@@ -170,6 +170,17 @@ describe('BaseClient:', () => {
             expect(subscription.onError).toBeDefined();
             expect(subscription.onError).toEqual(listener);
         });
+
+        it('should add onNodeNotifyListener', () => {
+            const client = new TestClient(defaultConfig);
+            const listener = (_data: any[]) => { };
+            client.addOnNodeNotifyListener(listener);
+
+            const subscription = SubscriptionMock.mock.instances[0];
+
+            expect(subscription.onNodeNotify).toBeDefined();
+            expect(subscription.onNodeNotify).toEqual(listener);
+        });
     });
 
     describe('connect:', () => {

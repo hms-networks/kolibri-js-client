@@ -15,7 +15,10 @@
 */
 
 
-import { cV32 as latest, KolibriRpcServer as RemoteRpcTarget } from '@hms-networks/kolibri-js-core';
+import {
+    cV33 as latest,
+    KolibriRpcServer as RemoteRpcTarget
+} from '@hms-networks/kolibri-js-core';
 
 export { ClientConfig } from './client_config';
 
@@ -130,3 +133,8 @@ export type NodeGetHistoryParams = latest.NodeGetHistoryParams
 export type NodeGetHistoryResult = latest.NodeGetHistoryResult
 
 export type NodeDeleteHistoryParams = latest.NodeDeleteHistoryParams
+
+export type NodeSubscribeParams = latest.NodeSubscribeParams;
+export type NodeUnsubscribeParams = latest.NodeUnsubscribeParams;
+export type NodeNotifyParams = latest.NodeNotifyParams;
+export type NodeNotifyRequest = latest.NodeNotifyRequest;
