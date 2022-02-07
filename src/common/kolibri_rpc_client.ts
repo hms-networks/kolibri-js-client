@@ -16,11 +16,11 @@
 
 
 import {
-    cV32, DefaultKolibriResponse, isDefined, KolibriRpcRequest, KolibriRpcServer, KolibriRpcSuccessResponse
+    cV33, DefaultKolibriResponse, isDefined, KolibriRpcRequest, KolibriRpcServer, KolibriRpcSuccessResponse
 } from '@hms-networks/kolibri-js-core';
 import { BaseClient } from './base_client';
 
-const KOLIBRI_PROTOCOL = 'v3.2.c.kolibri';
+const KOLIBRI_PROTOCOL = 'v3.3.c.kolibri';
 
 export class KolibriRpcClient extends BaseClient {
     override getKolibriProtocol(): string {
@@ -36,7 +36,7 @@ export class KolibriRpcClient extends BaseClient {
     // -------------------------------------------------------------------------------------
     // ----------------------- GENERAL -----------------------------------------------------
     // -------------------------------------------------------------------------------------
-    override async login(params?: cV32.LoginParams): Promise<cV32.LoginResult> {
+    override async login(params?: cV33.LoginParams): Promise<cV33.LoginResult> {
         let loginParams;
         if (isDefined(this.config.auth)) {
             loginParams = this.config.auth;
@@ -48,21 +48,21 @@ export class KolibriRpcClient extends BaseClient {
             throw new Error('Authentication not provided. ClientConfig#auth or login params must be provided.');
         }
 
-        const request = new cV32.LoginRequest(this.getNextRpcId(), loginParams);
-        const response: cV32.LoginResponse = await this.sendKolibriRequest(request);
+        const request = new cV33.LoginRequest(this.getNextRpcId(), loginParams);
+        const response: cV33.LoginResponse = await this.sendKolibriRequest(request);
         this.storeLoginData(loginParams, response.result);
         return response.result;
     }
 
     async close(): Promise<number> {
         this.connection.disableReconnect();
-        const request = new cV32.CloseRequest(this.getNextRpcId());
-        const response: cV32.CloseResponse = await this.sendKolibriRequest(request);
+        const request = new cV33.CloseRequest(this.getNextRpcId());
+        const response: cV33.CloseResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async write(params: cV32.WriteParams): Promise<number> {
-        const request = new cV32.WriteRequest(this.getNextRpcId(), params);
+    async write(params: cV33.WriteParams): Promise<number> {
+        const request = new cV33.WriteRequest(this.getNextRpcId(), params);
 
         let firstQoSGroup = false;
         let secondQoSGroup = false;
@@ -88,16 +88,16 @@ export class KolibriRpcClient extends BaseClient {
         }
 
         try {
-            const response: cV32.WriteResponse = await this.sendKolibriRequest(request);
+            const response: cV33.WriteResponse = await this.sendKolibriRequest(request);
             if (tId) {
-                await this.commit(new cV32.CommitParams(tId));
+                await this.commit(new cV33.CommitParams(tId));
             }
             return response.result;
         }
         catch (e) {
             if (tId) {
                 try {
-                    await this.cancel(new cV32.CancelParams(tId));
+                    await this.cancel(new cV33.CancelParams(tId));
                 }
                 catch (ex) {
                     throw ex;
@@ -107,34 +107,34 @@ export class KolibriRpcClient extends BaseClient {
         }
     }
 
-    async read(params: cV32.ReadParams[]): Promise<cV32.ReadResult[]> {
-        const request = new cV32.ReadRequest(this.getNextRpcId(), params);
-        const response: cV32.ReadResponse = await this.sendKolibriRequest(request);
+    async read(params: cV33.ReadParams[]): Promise<cV33.ReadResult[]> {
+        const request = new cV33.ReadRequest(this.getNextRpcId(), params);
+        const response: cV33.ReadResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    protected async commit(params: cV32.CommitParams): Promise<number> {
-        const request = new cV32.CommitRequest(this.getNextRpcId(), params);
-        const response: cV32.CommitResponse = await this.sendKolibriRequest(request);
+    protected async commit(params: cV33.CommitParams): Promise<number> {
+        const request = new cV33.CommitRequest(this.getNextRpcId(), params);
+        const response: cV33.CommitResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    protected async cancel(params: cV32.CancelParams): Promise<number> {
-        const request = new cV32.CancelRequest(this.getNextRpcId(), params);
-        const response: cV32.CancelResponse = await this.sendKolibriRequest(request);
+    protected async cancel(params: cV33.CancelParams): Promise<number> {
+        const request = new cV33.CancelRequest(this.getNextRpcId(), params);
+        const response: cV33.CancelResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    override async subscribe(params: cV32.SubscribeParams[]): Promise<cV32.SubscribeResult[]> {
-        const request = new cV32.SubscribeRequest(this.getNextRpcId(), params);
-        const response: cV32.SubscribeResponse = await this.sendKolibriRequest(request);
+    override async subscribe(params: cV33.SubscribeParams[]): Promise<cV33.SubscribeResult[]> {
+        const request = new cV33.SubscribeRequest(this.getNextRpcId(), params);
+        const response: cV33.SubscribeResponse = await this.sendKolibriRequest(request);
         this.subscription.storeSubscribedNodes(response.result);
         this.storeSubscribeData(params, response.result);
         return response.result;
     }
 
-    async unsubscribe(params: cV32.UnsubscribeParams[]): Promise<number> {
-        const request = new cV32.UnsubscribeRequest(this.getNextRpcId(), params);
+    async unsubscribe(params: cV33.UnsubscribeParams[]): Promise<number> {
+        const request = new cV33.UnsubscribeRequest(this.getNextRpcId(), params);
         const response: DefaultKolibriResponse = await this.sendKolibriRequest(request);
         this.subscription.deleteSubscribedNodes(params);
         this.clearSubscribeData();
@@ -144,160 +144,160 @@ export class KolibriRpcClient extends BaseClient {
     // -------------------------------------------------------------------------------------
     // ----------------------- PERMISSION MANAGEMENT ---------------------------------------
     // -------------------------------------------------------------------------------------
-    async permissionNodeSet(params: cV32.PermissionNodeSetParams): Promise<number> {
-        const request = new cV32.PermissionNodeSetRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionNodeSetResponse = await this.sendKolibriRequest(request);
+    async permissionNodeSet(params: cV33.PermissionNodeSetParams): Promise<number> {
+        const request = new cV33.PermissionNodeSetRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionNodeSetResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async permissionNodeList(params: cV32.PermissionNodeListParams):
-        Promise<cV32.PermissionNodeListResult[]> {
-        const request = new cV32.PermissionNodeListRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionNodeListResponse = await this.sendKolibriRequest(request);
+    async permissionNodeList(params: cV33.PermissionNodeListParams):
+        Promise<cV33.PermissionNodeListResult[]> {
+        const request = new cV33.PermissionNodeListRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionNodeListResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async permissionRpcAdd(params: cV32.PermissionRpcAddParams): Promise<number> {
-        const request = new cV32.PermissionRpcAddRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionRpcAddResponse = await this.sendKolibriRequest(request);
+    async permissionRpcAdd(params: cV33.PermissionRpcAddParams): Promise<number> {
+        const request = new cV33.PermissionRpcAddRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionRpcAddResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async permissionRpcRemove(params: cV32.PermissionRpcRemoveParams): Promise<number> {
-        const request = new cV32.PermissionRpcRemoveRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionRpcRemoveResponse = await this.sendKolibriRequest(request);
+    async permissionRpcRemove(params: cV33.PermissionRpcRemoveParams): Promise<number> {
+        const request = new cV33.PermissionRpcRemoveRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionRpcRemoveResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async permissionRpcList(params: cV32.PermissionRpcListParams):
-        Promise<cV32.PermissionRpcListResult[]> {
-        const request = new cV32.PermissionRpcListRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionRpcListResponse = await this.sendKolibriRequest(request);
+    async permissionRpcList(params: cV33.PermissionRpcListParams):
+        Promise<cV33.PermissionRpcListResult[]> {
+        const request = new cV33.PermissionRpcListRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionRpcListResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async permissionUserList(params: cV32.PermissionUserListParams):
-        Promise<cV32.PermissionUserListResult[]> {
-        const request = new cV32.PermissionUserListRequest(this.getNextRpcId(), params);
-        const response: cV32.PermissionUserListResponse = await this.sendKolibriRequest(request);
+    async permissionUserList(params: cV33.PermissionUserListParams):
+        Promise<cV33.PermissionUserListResult[]> {
+        const request = new cV33.PermissionUserListRequest(this.getNextRpcId(), params);
+        const response: cV33.PermissionUserListResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
     // -------------------------------------------------------------------------------------
     // ----------------------- PROJECT MANAGEMENT ------------------------------------------
     // -------------------------------------------------------------------------------------
-    async projectBrowse(params: cV32.ProjectBrowseParams): Promise<cV32.ProjectBrowseResult[]> {
-        const request = new cV32.ProjectBrowseRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectBrowseResponse = await this.sendKolibriRequest(request);
+    async projectBrowse(params: cV33.ProjectBrowseParams): Promise<cV33.ProjectBrowseResult[]> {
+        const request = new cV33.ProjectBrowseRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectBrowseResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectCreate(params: cV32.ProjectCreateParams): Promise<number> {
-        const request = new cV32.ProjectCreateRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectCreateResponse = await this.sendKolibriRequest(request);
+    async projectCreate(params: cV33.ProjectCreateParams): Promise<number> {
+        const request = new cV33.ProjectCreateRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectCreateResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectDelete(params: cV32.ProjectDeleteParams): Promise<number> {
-        const request = new cV32.ProjectDeleteRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectDeleteResponse = await this.sendKolibriRequest(request);
+    async projectDelete(params: cV33.ProjectDeleteParams): Promise<number> {
+        const request = new cV33.ProjectDeleteRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectDeleteResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectGetLiveUsage(params: cV32.ProjectGetLiveUsageParams):
-        Promise<cV32.ProjectGetLiveUsageResult[]> {
-        const request = new cV32.ProjectGetLiveUsageRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectGetLiveUsageResponse = await this.sendKolibriRequest(request);
+    async projectGetLiveUsage(params: cV33.ProjectGetLiveUsageParams):
+        Promise<cV33.ProjectGetLiveUsageResult[]> {
+        const request = new cV33.ProjectGetLiveUsageRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectGetLiveUsageResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectGetProperties(params: cV32.ProjectGetPropertiesParams):
-        Promise<cV32.ProjectGetPropertiesResult> {
-        const request = new cV32.ProjectGetPropertiesRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectGetPropertiesResponse = await this.sendKolibriRequest(request);
+    async projectGetProperties(params: cV33.ProjectGetPropertiesParams):
+        Promise<cV33.ProjectGetPropertiesResult> {
+        const request = new cV33.ProjectGetPropertiesRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectGetPropertiesResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectGetStatistics(params: cV32.ProjectGetStatisticsParams):
-        Promise<cV32.ProjectGetStatisticsResult> {
-        const request = new cV32.ProjectGetStatisticsRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectGetStatisticsResponse = await this.sendKolibriRequest(request);
+    async projectGetStatistics(params: cV33.ProjectGetStatisticsParams):
+        Promise<cV33.ProjectGetStatisticsResult> {
+        const request = new cV33.ProjectGetStatisticsRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectGetStatisticsResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectModify(params: cV32.ProjectModifyParams): Promise<number> {
-        const request = new cV32.ProjectModifyRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectModifyResponse = await this.sendKolibriRequest(request);
+    async projectModify(params: cV33.ProjectModifyParams): Promise<number> {
+        const request = new cV33.ProjectModifyRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectModifyResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async projectGetHistoryUsage(params: cV32.ProjectGetHistoryUsageParams):
-        Promise<cV32.ProjectGetHistoryUsageResult> {
-        const request = new cV32.ProjectGetHistoryUsageRequest(this.getNextRpcId(), params);
-        const response: cV32.ProjectGetHistoryUsageResponse = await this.sendKolibriRequest(request);
+    async projectGetHistoryUsage(params: cV33.ProjectGetHistoryUsageParams):
+        Promise<cV33.ProjectGetHistoryUsageResult> {
+        const request = new cV33.ProjectGetHistoryUsageRequest(this.getNextRpcId(), params);
+        const response: cV33.ProjectGetHistoryUsageResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
     // -------------------------------------------------------------------------------------
     // ----------------------- USER MANAGEMENT ---------------------------------------------
     // -------------------------------------------------------------------------------------
-    override async userSubscribe(params: cV32.UserSubscribeParams[]): Promise<cV32.UserSubscribeResult[]> {
-        const request = new cV32.UserSubscribeRequest(this.getNextRpcId(), params);
-        const response: cV32.UserSubscribeResponse = await this.sendKolibriRequest(request);
+    override async userSubscribe(params: cV33.UserSubscribeParams[]): Promise<cV33.UserSubscribeResult[]> {
+        const request = new cV33.UserSubscribeRequest(this.getNextRpcId(), params);
+        const response: cV33.UserSubscribeResponse = await this.sendKolibriRequest(request);
         this.storeUserSubscribeData(params, response.result);
         return response.result;
     }
 
-    async userUnsubscribe(params: cV32.UserUnsubscribeParams[]):
-        Promise<cV32.UserUnsubscribeResult[]> {
-        const request = new cV32.UserUnsubscribeRequest(this.getNextRpcId(), params);
-        const response: cV32.UserUnsubscribeResponse = await this.sendKolibriRequest(request);
+    async userUnsubscribe(params: cV33.UserUnsubscribeParams[]):
+        Promise<cV33.UserUnsubscribeResult[]> {
+        const request = new cV33.UserUnsubscribeRequest(this.getNextRpcId(), params);
+        const response: cV33.UserUnsubscribeResponse = await this.sendKolibriRequest(request);
         this.clearUserSubscribeData();
         return response.result;
     }
 
-    async userBrowse(params: cV32.UserBrowseParams):
-        Promise<cV32.UserBrowseResult[]> {
-        const request = new cV32.UserBrowseRequest(this.getNextRpcId(), params);
-        const response: cV32.UserBrowseResponse = await this.sendKolibriRequest(request);
+    async userBrowse(params: cV33.UserBrowseParams):
+        Promise<cV33.UserBrowseResult[]> {
+        const request = new cV33.UserBrowseRequest(this.getNextRpcId(), params);
+        const response: cV33.UserBrowseResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userCreate(params: cV32.UserCreateParams): Promise<number> {
-        const request = new cV32.UserCreateRequest(this.getNextRpcId(), params);
-        const response: cV32.UserCreateResponse = await this.sendKolibriRequest(request);
+    async userCreate(params: cV33.UserCreateParams): Promise<number> {
+        const request = new cV33.UserCreateRequest(this.getNextRpcId(), params);
+        const response: cV33.UserCreateResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userModify(params: cV32.UserModifyParams): Promise<number> {
-        const request = new cV32.UserModifyRequest(this.getNextRpcId(), params);
-        const response: cV32.UserModifyResponse = await this.sendKolibriRequest(request);
+    async userModify(params: cV33.UserModifyParams): Promise<number> {
+        const request = new cV33.UserModifyRequest(this.getNextRpcId(), params);
+        const response: cV33.UserModifyResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGetSessions(params: cV32.UserGetSessionsParams):
-        Promise<cV32.UserGetSessionsResult[]> {
-        const request = new cV32.UserGetSessionsRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGetSessionsResponse = await this.sendKolibriRequest(request);
+    async userGetSessions(params: cV33.UserGetSessionsParams):
+        Promise<cV33.UserGetSessionsResult[]> {
+        const request = new cV33.UserGetSessionsRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGetSessionsResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGetHistory(params: cV32.UserGetHistoryParams):
-        Promise<cV32.UserGetHistoryResult[]> {
-        const request = new cV32.UserGetHistoryRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGetHistoryResponse = await this.sendKolibriRequest(request);
+    async userGetHistory(params: cV33.UserGetHistoryParams):
+        Promise<cV33.UserGetHistoryResult[]> {
+        const request = new cV33.UserGetHistoryRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGetHistoryResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userDelete(params: cV32.UserDeleteParams): Promise<number> {
-        const request = new cV32.UserDeleteRequest(this.getNextRpcId(), params);
-        const response: cV32.UserDeleteResponse = await this.sendKolibriRequest(request);
+    async userDelete(params: cV33.UserDeleteParams): Promise<number> {
+        const request = new cV33.UserDeleteRequest(this.getNextRpcId(), params);
+        const response: cV33.UserDeleteResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGetProperties(params: cV32.UserGetPropertiesParams):
-        Promise<cV32.UserGetPropertiesResult> {
-        const request = new cV32.UserGetPropertiesRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGetPropertiesResponse = await this.sendKolibriRequest(request);
+    async userGetProperties(params: cV33.UserGetPropertiesParams):
+        Promise<cV33.UserGetPropertiesResult> {
+        const request = new cV33.UserGetPropertiesRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGetPropertiesResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
@@ -305,58 +305,58 @@ export class KolibriRpcClient extends BaseClient {
     // ----------------------- USERGROUP MANAGEMENT ----------------------------------------
     // -------------------------------------------------------------------------------------
 
-    async userGroupBrowse(params: cV32.UserGroupBrowseParams): Promise<cV32.UserGroupBrowseResult[]> {
-        const request = new cV32.UserGroupBrowseRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupBrowseResponse = await this.sendKolibriRequest(request);
+    async userGroupBrowse(params: cV33.UserGroupBrowseParams): Promise<cV33.UserGroupBrowseResult[]> {
+        const request = new cV33.UserGroupBrowseRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupBrowseResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupCreate(params: cV32.UserGroupCreateParams): Promise<number> {
-        const request = new cV32.UserGroupCreateRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupCreateResponse = await this.sendKolibriRequest(request);
+    async userGroupCreate(params: cV33.UserGroupCreateParams): Promise<number> {
+        const request = new cV33.UserGroupCreateRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupCreateResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupModify(params: cV32.UserGroupModifyParams): Promise<number> {
-        const request = new cV32.UserGroupModifyRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupModifyResponse = await this.sendKolibriRequest(request);
+    async userGroupModify(params: cV33.UserGroupModifyParams): Promise<number> {
+        const request = new cV33.UserGroupModifyRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupModifyResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupDelete(params: cV32.UserGroupDeleteParams): Promise<number> {
-        const request = new cV32.UserGroupDeleteRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupDeleteResponse = await this.sendKolibriRequest(request);
+    async userGroupDelete(params: cV33.UserGroupDeleteParams): Promise<number> {
+        const request = new cV33.UserGroupDeleteRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupDeleteResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupGetProperties(params: cV32.UserGroupGetPropertiesParams):
-        Promise<cV32.UserGroupGetPropertiesResult> {
-        const request = new cV32.UserGroupGetPropertiesRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupGetPropertiesResponse = await this.sendKolibriRequest(request);
+    async userGroupGetProperties(params: cV33.UserGroupGetPropertiesParams):
+        Promise<cV33.UserGroupGetPropertiesResult> {
+        const request = new cV33.UserGroupGetPropertiesRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupGetPropertiesResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupAddMember(params: cV32.UserGroupAddMemberParams): Promise<number> {
-        const request = new cV32.UserGroupAddMemberRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupAddMemberResponse = await this.sendKolibriRequest(request);
+    async userGroupAddMember(params: cV33.UserGroupAddMemberParams): Promise<number> {
+        const request = new cV33.UserGroupAddMemberRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupAddMemberResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupRemoveMember(params: cV32.UserGroupRemoveMemberParams): Promise<number> {
-        const request = new cV32.UserGroupRemoveMemberRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupRemoveMemberResponse = await this.sendKolibriRequest(request);
+    async userGroupRemoveMember(params: cV33.UserGroupRemoveMemberParams): Promise<number> {
+        const request = new cV33.UserGroupRemoveMemberRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupRemoveMemberResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupListMembers(params: cV32.UserGroupListMembersParams): Promise<string[]> {
-        const request = new cV32.UserGroupListMembersRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupListMembersResponse = await this.sendKolibriRequest(request);
+    async userGroupListMembers(params: cV33.UserGroupListMembersParams): Promise<string[]> {
+        const request = new cV33.UserGroupListMembersRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupListMembersResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async userGroupIsMember(params: cV32.UserGroupIsMemberParams): Promise<boolean> {
-        const request = new cV32.UserGroupIsMemberRequest(this.getNextRpcId(), params);
-        const response: cV32.UserGroupIsMemberResponse = await this.sendKolibriRequest(request);
+    async userGroupIsMember(params: cV33.UserGroupIsMemberParams): Promise<boolean> {
+        const request = new cV33.UserGroupIsMemberRequest(this.getNextRpcId(), params);
+        const response: cV33.UserGroupIsMemberResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
@@ -364,45 +364,57 @@ export class KolibriRpcClient extends BaseClient {
     // ----------------------- NODE MANAGEMENT ----------------------------------------
     // -------------------------------------------------------------------------------------
 
-    async nodeBrowse(params: cV32.NodeBrowseParams): Promise<cV32.NodeBrowseResult[]> {
-        const request = new cV32.NodeBrowseRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeBrowseResponse = await this.sendKolibriRequest(request);
+    async nodeBrowse(params: cV33.NodeBrowseParams): Promise<cV33.NodeBrowseResult[]> {
+        const request = new cV33.NodeBrowseRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeBrowseResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeCreate(params: cV32.NodeCreateParams): Promise<number> {
-        const request = new cV32.NodeCreateRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeCreateResponse = await this.sendKolibriRequest(request);
+    async nodeCreate(params: cV33.NodeCreateParams): Promise<number> {
+        const request = new cV33.NodeCreateRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeCreateResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeModify(params: cV32.NodeModifyParams): Promise<number> {
-        const request = new cV32.NodeModifyRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeModifyResponse = await this.sendKolibriRequest(request);
+    async nodeModify(params: cV33.NodeModifyParams): Promise<number> {
+        const request = new cV33.NodeModifyRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeModifyResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeDelete(params: cV32.NodeDeleteParams): Promise<number> {
-        const request = new cV32.NodeDeleteRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeDeleteResponse = await this.sendKolibriRequest(request);
+    async nodeDelete(params: cV33.NodeDeleteParams): Promise<number> {
+        const request = new cV33.NodeDeleteRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeDeleteResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeGetProperties(params: cV32.NodeGetPropertiesParams): Promise<cV32.NodeGetPropertiesResult> {
-        const request = new cV32.NodeGetPropertiesRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeGetPropertiesResponse = await this.sendKolibriRequest(request);
+    async nodeGetProperties(params: cV33.NodeGetPropertiesParams): Promise<cV33.NodeGetPropertiesResult> {
+        const request = new cV33.NodeGetPropertiesRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeGetPropertiesResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeGetHistory(params: cV32.NodeGetHistoryParams): Promise<cV32.NodeGetHistoryResult[]> {
-        const request = new cV32.NodeGetHistoryRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeGetHistoryResponse = await this.sendKolibriRequest(request);
+    async nodeGetHistory(params: cV33.NodeGetHistoryParams): Promise<cV33.NodeGetHistoryResult[]> {
+        const request = new cV33.NodeGetHistoryRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeGetHistoryResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 
-    async nodeDeleteHistory(params: cV32.NodeDeleteHistoryParams): Promise<number> {
-        const request = new cV32.NodeDeleteHistoryRequest(this.getNextRpcId(), params);
-        const response: cV32.NodeDeleteHistoryResponse = await this.sendKolibriRequest(request);
+    async nodeDeleteHistory(params: cV33.NodeDeleteHistoryParams): Promise<number> {
+        const request = new cV33.NodeDeleteHistoryRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeDeleteHistoryResponse = await this.sendKolibriRequest(request);
+        return response.result;
+    }
+
+    async nodeSubscribe(params: cV33.NodeSubscribeParams): Promise<number> {
+        const request = new cV33.NodeSubscribeRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeSubscribeResponse = await this.sendKolibriRequest(request);
+        return response.result;
+    }
+
+    async nodeUnsubscribe(params: cV33.NodeUnsubscribeParams): Promise<number> {
+        const request = new cV33.NodeUnsubscribeRequest(this.getNextRpcId(), params);
+        const response: cV33.NodeUnsubscribeResponse = await this.sendKolibriRequest(request);
         return response.result;
     }
 }

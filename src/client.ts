@@ -14,12 +14,11 @@
 * limitations under the License.
 */
 
-
 import {
     KolibriRpcServer,
     LoginParams, LoginResult, NodeBrowseParams, NodeBrowseResult, NodeCreateParams,
     NodeDeleteHistoryParams, NodeDeleteParams, NodeGetHistoryParams, NodeGetHistoryResult,
-    NodeGetPropertiesParams, NodeGetPropertiesResult, NodeModifyParams, PermissionNodeListParams,
+    NodeGetPropertiesParams, NodeGetPropertiesResult, NodeModifyParams, NodeNotifyParams, NodeSubscribeParams, NodeUnsubscribeParams, PermissionNodeListParams,
     PermissionNodeListResult, PermissionNodeSetParams, PermissionRpcAddParams, PermissionRpcListParams,
     PermissionRpcListResult, PermissionRpcRemoveParams, PermissionUserListParams, PermissionUserListResult,
     ProjectBrowseParams, ProjectBrowseResult, ProjectCreateParams, ProjectDeleteParams, ProjectGetHistoryUsageParams,
@@ -51,6 +50,10 @@ export class KolibriClient {
 
     public addOnUserNotifyListener(listener: (data: any[]) => void) {
         this.delegate.addOnUserNotifyListener(listener);
+    }
+
+    public addOnNodeNotifyListener(listener: (data: NodeNotifyParams) => void) {
+        this.delegate.addOnNodeNotifyListener(listener);
     }
 
     public addOnErrorListener(listener: (error: any) => void) {
@@ -275,5 +278,13 @@ export class KolibriClient {
 
     async nodeDeleteHistory(params: NodeDeleteHistoryParams): Promise<number> {
         return this.delegate.nodeDeleteHistory(params);
+    }
+    
+    async nodeSubscribe(params: NodeSubscribeParams): Promise<number> {
+        return this.delegate.nodeSubscribe(params);
+    }
+
+    async nodeUnsubscribe(params: NodeUnsubscribeParams): Promise<number> {
+        return this.delegate.nodeUnsubscribe(params);
     }
 }

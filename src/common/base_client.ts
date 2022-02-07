@@ -28,6 +28,7 @@ import {
     KolibriRpcSuccessResponse,
     KolibriSuccessResponse
 } from '@hms-networks/kolibri-js-core';
+import { NodeNotifyParams, NodeNotifyRequest } from './../client_types';
 import { ClientConfig } from '../client_config';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { getRequestError } from '../error/kolibri_request_error';
@@ -147,6 +148,10 @@ export abstract class BaseClient {
         this.subscription.onUserNotify = listener;
     }
 
+    public addOnNodeNotifyListener(listener: (data: NodeNotifyParams) => void): void {
+        this.subscription.onNodeNotify = listener;
+    }
+
     public addOnErrorListener(listener: (error: any) => void): void {
         this.subscription.onError = listener;
     }
@@ -260,6 +265,19 @@ export abstract class BaseClient {
         }
     }
 
+    protected async handleNodeNotifyRequest(request: NodeNotifyRequest): Promise<void> {
+        const nodeNotifyRequest: NodeNotifyRequest = request;
+
+        try {
+            const response = new DefaultKolibriResponse(request.id, 0);
+            await this.connection.sendResponse(response);
+            this.subscription.onNodeNotify?.(nodeNotifyRequest.params);
+        }
+        catch (e) {
+            this.subscription.onError?.(e);
+        }
+    }
+
     protected async handleCommitRequest(request: any): Promise<void> {
         const commitRequest: any = request;
 
@@ -358,7 +376,9 @@ export abstract class BaseClient {
         this.consumerRpcs.set(KolibriRequestMethods.UserNotifyRequestMethod,
             this.handleUserNotifyRequest.bind(this));
         this.consumerRpcs.set(KolibriRequestMethods.CommitRequestMethod,
-            this.handleCommitRequest.bind(this));
+            this.handleCommitRequest.bind(this));   
+        this.consumerRpcs.set(KolibriRequestMethods.NodeNotifyRequestMethod,
+            this.handleNodeNotifyRequest.bind(this));
     }
 
     private initReconnectHandler(): void {

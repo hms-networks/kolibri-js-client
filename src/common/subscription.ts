@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+import { NodeNotifyParams } from './../client_types';
 
 interface AbstractNode {
     path: string
@@ -29,6 +30,8 @@ export class Subscription<T extends AbstractNode> {
     onUnsubscribed?: (data: any[]) => void;
 
     onUserNotify?: (data: any[]) => void;
+
+    onNodeNotify?: (data: NodeNotifyParams) => void;
 
     onError?: (error: any) => void;
 
