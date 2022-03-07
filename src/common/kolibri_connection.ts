@@ -33,7 +33,7 @@ export interface ReconnectOptions {
 }
 
 export interface ConnectionOptions {
-    url: Url,
+    url: Url<string>,
     protocol: string,
     tlsOptions?: https.RequestOptions,
     reconnectOptions?: ReconnectOptions,
