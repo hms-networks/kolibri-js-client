@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.3
+
+- chore: update dependencies
+
 ## 2.0.2
 
 - fix: wss connection error with undefined tls config parameter
