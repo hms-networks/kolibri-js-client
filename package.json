@@ -1,6 +1,6 @@
 {
   "name": "@hms-networks/kolibri-js-client",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Kolibri Consumer API client for building kolibri based applications",
   "author": "HMS Industrial Networks AB",
   "homepage": "https://www.hms-networks.com",

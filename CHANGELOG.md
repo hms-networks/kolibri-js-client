@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.0.4
+
+- chore: update dependencies
+- fix: align to new jest's useFakeTimers api
+- fix: remove unused mock
+
 ## 2.0.3
 
 - chore: update dependencies
