@@ -20,7 +20,6 @@ import WebSocketAsPromised from 'websocket-as-promised';
 import Url from 'url-parse';
 import { TestRequest } from '../test_utils/test_models';
 jest.mock('websocket-as-promised');
-jest.mock('ws');
 const WebSocketAsPromisedMock = WebSocketAsPromised as jest.MockedClass<typeof WebSocketAsPromised>;
 WebSocketAsPromisedMock.prototype.onUnpackedMessage = jest.fn() as any;
 WebSocketAsPromisedMock.prototype.onUnpackedMessage.addListener = jest.fn();
