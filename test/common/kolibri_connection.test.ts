@@ -107,7 +107,7 @@ describe('KolibriConnection:', () => {
             kolibriConnection.addOnReconnectListener(reconnectListenerMock);
 
             await kolibriConnection.connect();
-            jest.useFakeTimers('legacy');
+            jest.useFakeTimers({ legacyFakeTimers: true });
             expect(WebSocketAsPromisedMock.prototype.open).toHaveBeenCalled();
             expect(WebSocketAsPromisedMock.prototype.onClose.addListener).toHaveBeenCalled();
 
@@ -134,7 +134,7 @@ describe('KolibriConnection:', () => {
             kolibriConnection.addOnReconnectListener(reconnectListenerMock);
 
             await kolibriConnection.connect();
-            jest.useFakeTimers('legacy');
+            jest.useFakeTimers({ legacyFakeTimers: true });
             expect(WebSocketAsPromisedMock.prototype.open).toHaveBeenCalled();
             expect(WebSocketAsPromisedMock.prototype.onClose.addListener).toHaveBeenCalled();
             WebSocketAsPromisedMock.prototype.open.mockRejectedValueOnce(new Error());
